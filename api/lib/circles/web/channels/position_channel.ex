@@ -8,14 +8,14 @@ defmodule Circles.Web.PositionChannel do
     {:ok, socket}
   end
 
-  def handle_in("list:users", _, socket) do
-    users = Tracker.list()
-
-    {:reply, {:ok, users}, socket}
-  end
+  # def handle_in("list:users", _, socket) do
+  #   users = Tracker.list()
+  # 
+  #   {:reply, {:ok, users}, socket}
+  # end
 
   def insert_and_broadcast(user, socket, msg) do
-    Tracker.insert(user)
+    # Tracker.insert(user)
 
     broadcast(socket, msg, %{
       user: %{
@@ -25,6 +25,8 @@ defmodule Circles.Web.PositionChannel do
         handle: user.handle,
         x: user.x,
         y: user.y,
+        dir: user.dir,
+        time: :os.system_time(:milli_seconds)
       }
     })
 
@@ -36,9 +38,9 @@ defmodule Circles.Web.PositionChannel do
     |> insert_and_broadcast(socket, msg)
   end
 
-  def handle_in("new:position" = msg, %{"x" => x, "y"=> y}, socket) do
+  def handle_in("new:position" = msg, %{"x" => x, "y"=> y, "dir" => dir}, socket) do
     socket.assigns.current_user
-    |> Account.update_position({x, y})
+    |> Account.update_position({x, y, dir})
     |> insert_and_broadcast(socket, msg)
   end
 end

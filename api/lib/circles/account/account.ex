@@ -72,8 +72,8 @@ defmodule Circles.Account do
   @min 0
   @max 900
 
-  def update_position(%User{} = user, {x, y} \\ {0, 0}) do
-    %{user | x: correct_point(x), y: correct_point(y)}
+  def update_position(%User{} = user, {x, y, dir} \\ {0, 0, "east"}) do
+    %{user | x: correct_point(x), y: correct_point(y), dir: correct_dir(dir)}
   end
 
   ## Internal
@@ -87,6 +87,13 @@ defmodule Circles.Account do
 
       true ->
         p
+    end
+  end
+
+  defp correct_dir(dir) do
+    case dir do
+      x when x in ["north", "south", "east", "west"] -> x
+      _ -> "east"
     end
   end
 end

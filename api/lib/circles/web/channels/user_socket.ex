@@ -22,6 +22,7 @@ defmodule Circles.Web.UserSocket do
   @max_age 2 * 7 * 24 * 60 * 60
 
   def connect(%{"token" => token}, socket) do
+    IO.inspect(socket)
     case Phoenix.Token.verify(socket, "user", token, max_age: @max_age) do
       {:ok, user_id} ->
         user = Circles.Account.get_user!(user_id)
